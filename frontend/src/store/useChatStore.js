@@ -46,7 +46,6 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  // optimize this one later
   setSelectedUser: async (selectedUser) => set({ selectedUser }),
 
   subscribeToMessages: () => {
@@ -57,6 +56,9 @@ export const useChatStore = create((set, get) => ({
 
     // todo: optimize this later
     socket.on("newMessage", (newMessage) => {
+      const isMessageSentFromSelectedUser =
+        newMessage.senderId === selectedUser._id;
+      if (!isMessageSentFromSelectedUser) return;
       set({
         messages: [...get().messages, newMessage],
       });
