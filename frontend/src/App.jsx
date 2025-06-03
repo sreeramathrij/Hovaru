@@ -12,13 +12,22 @@ import LogInPage from './pages/LoginPage.jsx'
 import { axiosInstance } from './lib/axios.js'
 import { useAuthStore } from './store/useAuthStore.js'
 import { useEffect } from 'react'
+import { useThemeStore } from './store/useThemeStore.js'
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+
+  console.log({ onlineUsers });
+
+  const { theme } = useThemeStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth])
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   console.log({ authUser });
 
@@ -29,7 +38,7 @@ const App = () => {
   )
 
   return (
-    <div className=''>
+    <div>
       <Navbar />
       <Routes>
         <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />

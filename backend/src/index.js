@@ -6,13 +6,14 @@ import cors from "cors";
 import { connectDB } from "./lib/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
-
-const app = express();
+import { app, server } from "./lib/socket.js";
 
 dotenv.config();
+
 const PORT = process.env.PORT;
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
@@ -22,9 +23,9 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-app.use("/api/nessage", messageRoutes);
+app.use("/api/messages", messageRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`server is running on PORT:${PORT}`);
   connectDB();
 });
